@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.youtube.databinding.ItemPlaylistBinding
-import com.example.youtube.model.PlaylistItem
+import com.example.youtube.model.BaseResponse
 
 
-class YouTubeAdapter(private val onItemClick: (PlaylistItem) -> Unit) :
-    ListAdapter<PlaylistItem, YouTubeAdapter.ViewHolder>(DiffCallback()) {
+
+class YouTubeAdapter(private val onItemClick: (BaseResponse.Item) -> Unit) :
+    ListAdapter<BaseResponse.Item, YouTubeAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,12 +24,13 @@ class YouTubeAdapter(private val onItemClick: (PlaylistItem) -> Unit) :
         holder.bind(playlistItem)
     }
 
+
     class ViewHolder(
         private val binding: ItemPlaylistBinding,
-        private val onItemClick: (PlaylistItem) -> Unit
+        private val onItemClick: (BaseResponse.Item) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(playlistItem: PlaylistItem) {
+        fun bind(playlistItem: BaseResponse.Item) {
             binding.title.text = playlistItem.snippet.title
             binding.description.text = "${playlistItem.contentDetails.itemCount} videos"
 
@@ -43,12 +45,12 @@ class YouTubeAdapter(private val onItemClick: (PlaylistItem) -> Unit) :
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<PlaylistItem>() {
-        override fun areItemsTheSame(oldItem: PlaylistItem, newItem: PlaylistItem): Boolean {
+    class DiffCallback : DiffUtil.ItemCallback<BaseResponse.Item>() {
+        override fun areItemsTheSame(oldItem: BaseResponse.Item, newItem: BaseResponse.Item): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: PlaylistItem, newItem: PlaylistItem): Boolean {
+        override fun areContentsTheSame(oldItem: BaseResponse.Item, newItem: BaseResponse.Item): Boolean {
             return oldItem == newItem
         }
     }

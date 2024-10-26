@@ -1,12 +1,14 @@
 package com.example.youtube.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.youtube.Resource
 import com.example.youtube.databinding.FragmentPlaylistDetailsBinding
 import com.example.youtube.ui.adapter.VideoAdapter
 import com.example.youtube.viewmodel.YouTubeViewModel
@@ -23,15 +25,25 @@ class PlaylistDetailsFragment : Fragment() {
     ): View {
         _binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false)
 
-        val playlistId = arguments?.getString("playlistId") ?: ""
-
         val adapter = VideoAdapter()
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPlaylistItems.adapter = adapter
+        binding.rvPlaylistItems.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.getVideosFromPlaylist(playlistId)
-        viewModel.vadeos.observe(viewLifecycleOwner) { videos ->
-            adapter.submitList(videos)
+        val getId = arguments?.getString("id") ?: ""
+        val getSize = arguments?.getInt("size") ?: 0
+
+
+        viewModel.getPlaylistVideo(getId,getSize).observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    adapter.submitList(resource.data)
+                }
+                is Resource.Error -> {
+                    Log.e("PlaylistDetailsFragment", "Error: ${resource.message}")
+                }
+                is Resource.Loading -> {
+                }
+            }
         }
         return binding.root
     }

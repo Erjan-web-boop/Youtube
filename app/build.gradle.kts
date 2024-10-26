@@ -16,6 +16,19 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            "\"https://www.googleapis.com/youtube/v3/\""
+        )
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"AIzaSyAKMouoKTljTxHeOiooPxpcOlzdLQUgrVA\""
+        )
+
+
     }
 
     buildTypes {
@@ -35,7 +48,10 @@ android {
         jvmTarget = "1.8"
     }
 
-    buildFeatures.viewBinding = true
+    buildFeatures{
+        viewBinding = true
+        buildConfig = true
+    }
 }
 
 dependencies {

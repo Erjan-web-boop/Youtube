@@ -1,11 +1,13 @@
 package com.example.youtube.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.youtube.Resource
 import com.example.youtube.ui.adapter.YouTubeAdapter
 import com.example.youtube.viewmodel.YouTubeViewModel
 import com.example.youtube.databinding.FragmentYoutubeBinding
@@ -29,10 +31,18 @@ class YouTubeFragment : BaseFragment<FragmentYoutubeBinding>() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.playlists.observe(viewLifecycleOwner) { playlists ->
-            adapter.submitList(playlists)
+        viewModel.getPlaylists().observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    adapter.submitList(resource.data)
+                }
+                is Resource.Error -> {
+                }
+                is Resource.Loading -> {
+                }
+            }
         }
-        viewModel.getPlaylists("UC_x5XG1OV2P6uZZ5FSM9Ttw")
+        viewModel.getPlaylists()
     }
 
     private fun openPlaylistDetails(playlistId: String) {
